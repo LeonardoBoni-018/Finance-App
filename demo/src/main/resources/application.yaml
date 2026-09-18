@@ -1,3 +1,29 @@
 spring:
   application:
     name: demo
+
+  # Perfil ativo por padrão - sobrescrito em produção via variável de ambiente
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+
+  jpa:
+    open-in-view: false   # evita problemas de performance/N+1 escondidos
+    properties:
+      hibernate:
+        format_sql: true
+
+  mvc:
+    problemdetails:
+      enabled: true   # exceptions internas do Spring (404 de rota, 405, etc.) também viram ProblemDetail
+
+server:
+  port: ${SERVER_PORT:8080}
+  error:
+    include-message: always
+    include-binding-errors: always
+
+# Configurações customizadas da aplicação (usadas pelo scheduler de lembretes, etc.)
+app:
+  reminder:
+    check-cron: "0 0 8 * * *"   # roda todo dia às 08:00 verificando vencimentos
+    days-before-due: 3          # avisa 3 dias antes do vencimento
